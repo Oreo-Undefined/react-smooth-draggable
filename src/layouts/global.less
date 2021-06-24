@@ -1,0 +1,60 @@
+html {
+  overflow: hidden;
+}
+html,
+body,
+#root {
+  height: 100%;
+}
+:root {
+  --theme: #ccc;
+}
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+  background-color: #f5f5f5;
+}
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+  background-color: #f6f6f7;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #cbcbd6;
+}
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ellipsis-1 {
+  display: -webkit-box;
+  /*! autoprefixer: off */
+  -webkit-box-orient: vertical;
+  /* autoprefixer: on */
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+}
+.ellipsis-2:extend(.ellipsis-1) {
+  -webkit-line-clamp: 2;
+}
+.ellipsis-3:extend(.ellipsis-1) {
+  -webkit-line-clamp: 3;
+}
+.ellipsis-4:extend(.ellipsis-1) {
+  -webkit-line-clamp: 4;
+}
+.ellipsis-5:extend(.ellipsis-1) {
+  -webkit-line-clamp: 5;
+}
+.ellipsis-6:extend(.ellipsis-1) {
+  -webkit-line-clamp: 6;
+}
+.ellipsis-7:extend(.ellipsis-1) {
+  -webkit-line-clamp: 7;
+}
+.ellipsis-8:extend(.ellipsis-1) {
+  -webkit-line-clamp: 8;
+}
