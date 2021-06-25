@@ -32,8 +32,20 @@ function mousePosNoChange(
   { width, height },
   cols,
   childNodes,
+  parentNode,
 ) {
-  if (
+  if (cols === 1) {
+    // 只有一列的排序
+    if (
+      pageX < left ||
+      pageX > right ||
+      pageY < top + height / 2 ||
+      pageY > bottom - height / 2
+    ) {
+      return true;
+    }
+  } else if (
+    // 多列的排序
     pageX < left + width / 2 ||
     pageX + width / 2 > right ||
     pageY < top + height / 2 ||
@@ -41,8 +53,8 @@ function mousePosNoChange(
   ) {
     return true;
   }
-  pageX -= left;
-  pageY -= top;
+  pageX -= left - parentNode.scrollLeft;
+  pageY -= top - parentNode.scrollTop;
 
   const realIndex =
     Math.floor(pageY / height) * cols + Math.floor(pageX / width);
@@ -71,7 +83,7 @@ function updateElPos($el, $elIndex, dropIndex, { width, height }, cols) {
   } else {
     // 从前往后放
     if ($elIndex > dropIndex || $elIndex < dragIndex) {
-      $el.style.transform = `translate3d(0,0,0)`;
+      $el.style.transform = 'translate3d(0,0,0)';
       return;
     }
     if ($elIndex % cols === 0) {
@@ -88,11 +100,21 @@ function switchDomAnimate(
   range,
   event,
   dragElement,
-  childNodes,
+  container,
   baseSize,
   cols,
 ) {
-  if (mousePosNoChange(range, event, baseSize, cols, childNodes)) {
+  const childNodes = container.childNodes;
+  if (
+    mousePosNoChange(
+      range,
+      event,
+      baseSize,
+      cols,
+      childNodes,
+      container.parentNode,
+    )
+  ) {
     return;
   }
 
@@ -127,17 +149,23 @@ export function mouseMoveHandler(
     { top, right, bottom, left },
     event,
     dragElement,
-    container.childNodes,
+    container,
     baseSize,
     cols,
   );
 }
 
-export function mouseUpHandler({ top, left }, { height, width }, cols) {
+export function mouseUpHandler(
+  container,
+  { top, left },
+  { height, width },
+  cols,
+) {
   if (shadowDom) {
     shadowDom.style.transition = 'all .3s';
-    const X = Math.floor(currentIndex / cols) * height + top;
-    const Y = Math.floor(currentIndex % cols) * width + left;
+    const { scrollLeft, scrollTop } = container.parentNode;
+    const X = Math.floor(currentIndex / cols) * height - scrollTop + top;
+    const Y = Math.floor(currentIndex % cols) * width - scrollLeft + left;
     shadowDom.style.top = `${X}px`;
     shadowDom.style.left = `${Y}px`;
     return new Promise(resolve => {
@@ -146,7 +174,7 @@ export function mouseUpHandler({ top, left }, { height, width }, cols) {
           document.body.removeChild(shadowDom);
           shadowDom = null;
         }
-        resolve();
+        resolve({ dragIndex, dropIndex: currentIndex });
       }, 300);
     });
   }

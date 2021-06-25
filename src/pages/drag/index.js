@@ -8,12 +8,15 @@ export default function Index() {
       .fill(0)
       .map((_, index) => ({ id: index + 1 })),
   );
+
+  const onChange = ({ list }) => setList(list);
+
   return (
     <Dragable
       list={list}
-      onChange={setList}
-      cols={5}
-      height={80}
+      onDragEnd={onChange}
+      cols={7}
+      height={120}
       dragClass={styles.dragClass}
       itemClass={styles.itemClass}
       wraperClass={styles.wraperClass}
