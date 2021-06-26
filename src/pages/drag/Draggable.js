@@ -4,7 +4,7 @@ import useResize from './useResize';
 import useMouseEvent from './useMouseEvent';
 import styles from './style.less';
 
-export default function Dragable({
+export default function Draggable({
   cols = 7,
   height = 80,
   list,
