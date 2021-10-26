@@ -25,31 +25,44 @@ function shadowDomAnimate(dragElement, { pageX, pageY }, dragClass) {
   shadowDom.style.left = pageX - disX + 'px';
 }
 
+const getCenterPos = e => {
+  if (shadowDom) {
+    let { top, left, height, width } = shadowDom.getBoundingClientRect();
+    return {
+      pageX: left + width / 2,
+      pageY: top + height / 2,
+    };
+  }
+
+  return e;
+};
+
 // 判断放置位置是否发生了变化
 function mousePosNoChange(
   { top, right, bottom, left },
-  { pageX, pageY },
+  event,
   { width, height },
   cols,
   childNodes,
   parentNode,
 ) {
+  let { pageX, pageY } = getCenterPos(event);
   if (cols === 1) {
     // 只有一列的排序
     if (
       pageX < left ||
       pageX > right ||
-      pageY < top + height / 2 ||
-      pageY > bottom - height / 2
+      pageY < top ||
+      pageY > bottom
     ) {
       return true;
     }
   } else if (
     // 多列的排序
     pageX < left + width / 2 ||
-    pageX + width / 2 > right ||
-    pageY < top + height / 2 ||
-    pageY > bottom - height / 2
+    pageY < top ||
+    pageY > bottom ||
+    pageX + width / 2 > right
   ) {
     return true;
   }
