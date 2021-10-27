@@ -36,13 +36,15 @@ export default function Draggable({
 
   useEffect(() => {
     STYLE.current = style;
-    range.current = containerRef.current.getBoundingClientRect();
   }, [style]);
 
   const onMouseDown = (e, index) => {
-    manager.current.dragElement = e.currentTarget;
-    manager.current.dragging = true;
-    manager.current.startIndex = index;
+    range.current = containerRef.current.getBoundingClientRect();
+    manager.current = {
+      dragElement: e.currentTarget,
+      dragging: true,
+      startIndex: index
+    };
     setDragStart(true);
     onDragStart?.(index);
   };
