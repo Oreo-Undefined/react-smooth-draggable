@@ -49,12 +49,7 @@ function mousePosNoChange(
   let { pageX, pageY } = getCenterPos(event);
   if (cols === 1) {
     // 只有一列的排序
-    if (
-      pageX < left ||
-      pageX > right ||
-      pageY < top ||
-      pageY > bottom
-    ) {
+    if (pageX < left || pageX > right || pageY < top || pageY > bottom) {
       return true;
     }
   } else if (
@@ -66,8 +61,8 @@ function mousePosNoChange(
   ) {
     return true;
   }
-  pageX -= left - parentNode.scrollLeft;
-  pageY -= top - parentNode.scrollTop;
+  pageX -= left;
+  pageY -= top;
 
   const realIndex =
     Math.floor(pageY / height) * cols + Math.floor(pageX / width);
@@ -141,15 +136,13 @@ function switchDomAnimate(
 export function mouseMoveHandler(
   manager,
   container,
-  range,
+  range, // 可拖拽的区域元素父级
   baseSize,
   event,
   cols,
   dragClass,
 ) {
   const { dragElement, startIndex } = manager, // 拖拽控件信息
-    { top, right, bottom, left } = range, // 可拖拽的区域元素父级
-    { pageX, pageY } = event, // 鼠标移动事件
     { width, height } = baseSize; // 子元素尺寸
   if (currentIndex === null) {
     currentIndex = startIndex;
@@ -159,7 +152,7 @@ export function mouseMoveHandler(
   }
   shadowDomAnimate(dragElement, event, dragClass);
   switchDomAnimate(
-    { top, right, bottom, left },
+    range,
     event,
     dragElement,
     container,
@@ -176,11 +169,10 @@ export function mouseUpHandler(
 ) {
   if (shadowDom) {
     shadowDom.style.transition = 'all .3s';
-    const { scrollLeft, scrollTop } = container.parentNode;
-    const X = Math.floor(currentIndex / cols) * height - scrollTop + top;
-    const Y = Math.floor(currentIndex % cols) * width - scrollLeft + left;
-    shadowDom.style.top = `${X}px`;
-    shadowDom.style.left = `${Y}px`;
+    const Y = Math.floor(currentIndex / cols) * height + top;
+    const X = Math.floor(currentIndex % cols) * width + left;
+    shadowDom.style.top = `${Y}px`;
+    shadowDom.style.left = `${X}px`;
     return new Promise(resolve => {
       setTimeout(() => {
         if (shadowDom) {
