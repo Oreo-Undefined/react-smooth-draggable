@@ -4,12 +4,13 @@ import useResize from './useResize';
 import useMouseEvent from './useMouseEvent';
 import styles from './style.less';
 
-export default function Draggable({
+export default function Dragable({
   cols = 7,
   height = 80,
   list,
   onDragStart,
-  onDragEnd,
+  onDragEnd = () => null,
+  onDragCancel = () => null,
   children,
   render,
   dragClass,
@@ -32,6 +33,7 @@ export default function Draggable({
     onDragEnd,
     containerRef,
     dragClass,
+    onDragCancel,
   });
 
   useEffect(() => {
@@ -43,10 +45,10 @@ export default function Draggable({
     manager.current = {
       dragElement: e.currentTarget,
       dragging: true,
-      startIndex: index
+      startIndex: index,
     };
     setDragStart(true);
-    onDragStart?.(index);
+    onDragStart && onDragStart(index);
   };
 
   const renderItem =
@@ -70,7 +72,7 @@ export default function Draggable({
           onMouseDown={e => onMouseDown(e, index)}
         >
           <div className={classnames(styles.Dragwraper, wraperClass)}>
-            {renderItem(item)}
+            {renderItem(item, index)}
           </div>
         </div>
       ))}
