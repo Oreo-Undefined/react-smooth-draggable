@@ -151,14 +151,7 @@ export function mouseMoveHandler(
     dragIndex = startIndex;
   }
   shadowDomAnimate(dragElement, event, dragClass);
-  switchDomAnimate(
-    range,
-    event,
-    dragElement,
-    container,
-    baseSize,
-    cols,
-  );
+  switchDomAnimate(range, event, dragElement, container, baseSize, cols);
 }
 
 export function mouseUpHandler(
