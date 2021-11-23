@@ -10,6 +10,7 @@ export default function useMouseEvent({
   onDragEnd,
   containerRef,
   dragClass,
+  onDragCancel,
 }) {
   const [dragStart, setDragStart] = useState(false);
   const LIST = useRef(list);
@@ -32,7 +33,7 @@ export default function useMouseEvent({
           dragElement.style.opacity = 1;
           dragDetail.list = sortHandler(LIST.current, containerRef.current);
           onDragEnd(dragDetail);
-        });
+        }).catch(onDragCancel);
       }
       setDragStart(false);
     };
